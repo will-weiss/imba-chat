@@ -3,14 +3,25 @@ var socket = io()
 
 var ENTER_KEY = 13
 
-var activeChat = Chat.new
+var BriBri = User.new('Brian', 'http://media2.giphy.com/media/8KrhxtEsrdhD2/giphy.gif')
+var OuiOui = User.new('Will', 'http://ak-hdl.buzzfed.com/static/2015-08/20/14/enhanced/webdr07/anigif_enhanced-1164-1440095680-3.gif')
+
+var activeChat = Chat.new(BriBri, OuiOui)
+
+class User
+	prop name
+	prop avatar
+
+	def initialize name, avatar
+		@name = name
+		@avatar = avatar
 
 class Chat
 	prop me
 	prop them
 	prop messages
 
-	def initialize me = 'Brian', them = 'Will'
+	def initialize me, them
 		@me = me
 		@them = them
 		@messages = []
@@ -36,10 +47,17 @@ class ChatMessage
 		chat.messages.push self
 		#message-list.render
 
+tag avatar < img
+	def render
+		var user = @object
+		<self src=user.avatar>
+
 tag message-row < li
 	def render
 		var message = @object
-		<self> "{message.user}: {message.message}"
+		<self>
+			<p> "{message.user.name}: {message.message}"
+			<avatar[message.user]>
 
 tag message-list < ul
 	def render
